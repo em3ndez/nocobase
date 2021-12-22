@@ -2,7 +2,7 @@
  * @Author: Semmy Wong
  * @Date: 2021-12-10 15:54:39
  * @LastEditors: Semmy Wong
- * @LastEditTime: 2021-12-22 10:53:08
+ * @LastEditTime: 2021-12-22 11:07:30
  * @Description: 描述
  */
 import React, { useContext } from 'react';
@@ -34,6 +34,7 @@ export const Drawer: any = observer((props: any) => {
   const { useOkAction = useDefaultAction, useCancelAction = useDefaultAction, ...others } = props;
   const { schema, appendChild } = useDesignable();
   const fieldSchema = useFieldSchema();
+  //FIXME: 临时添加用于测试
   let fs = new Schema(generateDefaultFooterSchema() as any);
   fieldSchema.addProperty(uid(), fs);
   // fs = appendChild(fs);
