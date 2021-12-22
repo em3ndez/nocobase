@@ -1,5 +1,5 @@
 import { DndContext, DragOverlay } from '@dnd-kit/core';
-import { observer, RecursionField, Schema } from '@formily/react';
+import { observer, RecursionField, Schema, useField, useFieldSchema } from '@formily/react';
 import React, { useState } from 'react';
 import { ISchema } from '..';
 import { findPropertyByPath, getSchemaPath, useDesignable } from '../../components/schema-renderer';
@@ -14,9 +14,18 @@ import { useClient } from '../../constate';
 import { useTranslation } from 'react-i18next';
 
 export const ActionBar = observer((props: any) => {
-  const { align = 'top' } = props;
+  const { t } = useTranslation();
+  const {
+    align = 'top',
+    actions = [
+      { title: t('Edit'), name: 'update' },
+      { title: t('Delete'), name: 'destroy' },
+    ],
+  } = props;
   // const { schema, designable } = useDesignable();
-  const { root, schema, insertAfter, remove, appendChild } = useDesignable();
+  const { root, schema, insertAfter, remove, appendChild, refresh } = useDesignable();
+  const field = useField();
+  const fieldSchema = useFieldSchema();
   const moveToAfter = (path1, path2, extra = {}) => {
     if (!path1 || !path2) {
       return;
@@ -44,18 +53,20 @@ export const ActionBar = observer((props: any) => {
     <DndContext
       onDragStart={(event) => {
         setDragOverlayContent(event.active.data?.current?.title || '');
-        // const previewRef = event.active.data?.current?.previewRef;
-        // if (previewRef) {
-        //   setDragOverlayContent(previewRef?.current?.innerHTML);
-        // } else {
-        //   setDragOverlayContent('');
-        // }
       }}
       onDragEnd={async (event) => {
         const path1 = event.active?.data?.current?.path;
         const path2 = event.over?.data?.current?.path;
         const align = event.over?.data?.current?.align;
         const draggable = event.over?.data?.current?.draggable;
+        console.log('=====', schema, event, field, fieldSchema);
+        const property = findPropertyByPath(schema, ['submit']);
+        field.query(path1).take((f) => {
+          console.log('=====', f);
+        });
+        property['x-align'] = align;
+        debugger;
+
         if (!path1 || !path2) {
           return;
         }
@@ -103,7 +114,7 @@ export const ActionBar = observer((props: any) => {
           <div style={{ marginLeft: 'auto', width: '50%', textAlign: 'right' }}>
             <Actions align={'right'} />
           </div>
-          <AddActionButton />
+          <AddActionButton actions={actions} />
         </div>
       </DisplayedMapProvider>
     </DndContext>
@@ -170,11 +181,49 @@ function generateActionSchema(type) {
         useAction: '{{ Table.useTableDestroyAction }}',
       },
     },
+    submit: {
+      key: uid(),
+      name: 'submit',
+      type: 'void',
+      title: '提交',
+      'x-align': 'right',
+      'x-decorator': 'AddNew.Displayed',
+      'x-decorator-props': {
+        displayName: 'submit',
+      },
+      'x-designable-bar': 'Action.DesignableBar',
+      'x-component': 'Action',
+      'x-index': 1,
+      'x-component-props': {
+        title: '提交',
+        type: 'primary',
+        useAction: '{{submitHandler}}',
+      },
+    },
+    cancel: {
+      key: uid(),
+      name: 'cancel',
+      type: 'void',
+      title: '取消',
+      'x-align': 'right',
+      'x-decorator': 'AddNew.Displayed',
+      'x-decorator-props': {
+        displayName: 'cancel',
+      },
+      'x-designable-bar': 'Action.DesignableBar',
+      'x-component': 'Action',
+      'x-index': 2,
+      'x-component-props': {
+        title: '取消',
+        useAction: '{{cancelHandler}}',
+      },
+    },
   };
   return actions[type];
 }
 
-function AddActionButton() {
+function AddActionButton(props: any) {
+  const { actions } = props;
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const displayed = useDisplayedMapContext();
@@ -192,10 +241,7 @@ function AddActionButton() {
       overlay={
         <Menu>
           <Menu.ItemGroup title={t('Enable actions')}>
-            {[
-              { title: t('Edit'), name: 'update' },
-              { title: t('Delete'), name: 'destroy' },
-            ].map((item) => (
+            {actions.map((item) => (
               <SwitchMenuItem
                 key={item.name}
                 checked={displayed.has(item.name)}
