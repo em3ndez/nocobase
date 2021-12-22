@@ -60,12 +60,6 @@ export const ActionBar = observer((props: any) => {
         const align = event.over?.data?.current?.align;
         const draggable = event.over?.data?.current?.draggable;
         console.log('=====', schema, event, field, fieldSchema);
-        const property = findPropertyByPath(schema, ['submit']);
-        field.query(path1).take((f) => {
-          console.log('=====', f);
-        });
-        property['x-align'] = align;
-        debugger;
 
         if (!path1 || !path2) {
           return;
@@ -75,11 +69,13 @@ export const ActionBar = observer((props: any) => {
         }
         if (!draggable) {
           console.log('alignalignalignalign', align);
-          const p = findPropertyByPath(root, path1);
+          const p = findPropertyByPath(schema, path1);
           if (!p) {
             return;
           }
-          remove(path1);
+          debugger;
+          // remove(path1);
+          fieldSchema.removeProperty(p.name);
           const data = appendChild(
             {
               ...p.toJSON(),
@@ -305,7 +301,7 @@ function Actions(props: any) {
                 align,
                 draggable: true,
                 title: s.title,
-                path: getSchemaPath(s),
+                path: [s.name],
               }}
             >
               <RecursionField name={s.name} schema={s} />

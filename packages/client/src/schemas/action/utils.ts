@@ -1,10 +1,3 @@
-/*
- * @Author: Semmy Wong
- * @Date: 2021-12-21 14:28:50
- * @LastEditors: Semmy Wong
- * @LastEditTime: 2021-12-22 10:42:43
- * @Description: 描述
- */
 import { uid } from '@formily/shared';
 
 export function generateDefaultFooterSchema(type?: string) {

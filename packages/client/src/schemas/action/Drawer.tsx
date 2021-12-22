@@ -1,10 +1,3 @@
-/*
- * @Author: Semmy Wong
- * @Date: 2021-12-10 15:54:39
- * @LastEditors: Semmy Wong
- * @LastEditTime: 2021-12-22 11:07:30
- * @Description: 描述
- */
 import React, { useContext } from 'react';
 import {
   useForm,
@@ -13,6 +6,7 @@ import {
   Schema,
   RecursionField,
   SchemaExpressionScopeContext,
+  useField,
 } from '@formily/react';
 import { uid } from '@formily/shared';
 import { createPortal } from 'react-dom';
@@ -33,6 +27,7 @@ export const Drawer: any = observer((props: any) => {
   const compile = useCompile();
   const { useOkAction = useDefaultAction, useCancelAction = useDefaultAction, ...others } = props;
   const { schema, appendChild } = useDesignable();
+  const field = useField();
   const fieldSchema = useFieldSchema();
   //FIXME: 临时添加用于测试
   let fs = new Schema(generateDefaultFooterSchema() as any);
@@ -98,6 +93,7 @@ export const Drawer: any = observer((props: any) => {
                 >
                   <RecursionField
                     schema={fieldSchema}
+                    basePath={field.address}
                     onlyRenderProperties
                     filterProperties={(s) => s['x-component'] === 'Action.Drawer.Footer'}
                   />
@@ -119,6 +115,7 @@ export const Drawer: any = observer((props: any) => {
           <FormLayout layout={'vertical'}>
             {/* {props.children} */}
             <RecursionField
+              basePath={field.address}
               schema={fieldSchema}
               onlyRenderProperties
               filterProperties={(s) => s['x-component'] !== 'Action.Drawer.Footer'}
