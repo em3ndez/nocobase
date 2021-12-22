@@ -30,10 +30,11 @@ export const Drawer: any = observer((props: any) => {
   const field = useField();
   const fieldSchema = useFieldSchema();
   //FIXME: 临时添加用于测试
-  let fs = new Schema(generateDefaultFooterSchema() as any);
-  fieldSchema.addProperty(uid(), fs);
+  // let fs = new Schema(generateDefaultFooterSchema() as any);
+  // fieldSchema.addProperty(uid(), fs);
   // fs = appendChild(fs);
-  console.log('===========fieldSchema', fieldSchema, fieldSchema.toJSON());
+  // console.log('===========fieldSchema', fieldSchema, fieldSchema.root, fieldSchema.toJSON());
+  debugger;
   const [visible, setVisible] = useContext(VisibleContext);
   const { designable, setDesignable } = useDesignableSwitchContext();
   const form = useForm();
