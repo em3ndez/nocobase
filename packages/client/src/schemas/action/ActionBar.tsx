@@ -73,8 +73,7 @@ export const ActionBar = observer((props: any) => {
           if (!p) {
             return;
           }
-          debugger;
-          // remove(path1);
+          remove(path1);
           fieldSchema.removeProperty(p.name);
           const data = appendChild(
             {

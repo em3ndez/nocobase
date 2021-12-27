@@ -29,12 +29,6 @@ export const Drawer: any = observer((props: any) => {
   const { schema, appendChild } = useDesignable();
   const field = useField();
   const fieldSchema = useFieldSchema();
-  //FIXME: 临时添加用于测试
-  // let fs = new Schema(generateDefaultFooterSchema() as any);
-  // fieldSchema.addProperty(uid(), fs);
-  // fs = appendChild(fs);
-  // console.log('===========fieldSchema', fieldSchema, fieldSchema.root, fieldSchema.toJSON());
-  debugger;
   const [visible, setVisible] = useContext(VisibleContext);
   const { designable, setDesignable } = useDesignableSwitchContext();
   const form = useForm();
@@ -59,14 +53,12 @@ export const Drawer: any = observer((props: any) => {
             isFormDecorator &&
             !schema['x-read-pretty'] && (
               <>
-                {/* <ActionBar></ActionBar> */}
                 <SchemaExpressionScopeContext.Provider
                   value={{
                     cancelHandler() {
                       return {
                         async run(e) {
                           form.clearErrors();
-                          debugger;
                           props.onClose && (await props.onClose(e));
                           runCancel && (await runCancel());
                           setVisible(false);
@@ -80,7 +72,6 @@ export const Drawer: any = observer((props: any) => {
                       return {
                         async run(e) {
                           await form.submit();
-                          debugger;
                           props.onOk && (await props.onOk(e));
                           runOk && (await runOk());
                           setVisible(false);
