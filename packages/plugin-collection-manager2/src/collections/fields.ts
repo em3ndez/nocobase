@@ -45,7 +45,7 @@ export default {
       foreignKey: 'parentKey',
     },
     {
-      type: 'belongsTo',
+      type: 'hasOne',
       name: 'reverseField',
       target: 'fields',
       sourceKey: 'key',

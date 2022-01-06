@@ -4,6 +4,9 @@ import { CollectionModel } from './models/collection';
 import { FieldModel } from './models/field';
 import { uid } from '@nocobase/utils';
 import beforeInitOptions from './hooks/beforeInitOptions';
+import { beforeCreateForChildrenCollection } from './hooks/beforeCreateForChildrenCollection';
+import { beforeCreateForReverseField } from './hooks/beforeCreateForReverseField';
+import { afterCreateForReverseField } from './hooks/afterCreateForReverseField';
 
 export default class CollectionManagerPlugin extends Plugin {
   async load() {
@@ -14,6 +17,10 @@ export default class CollectionManagerPlugin extends Plugin {
     await this.app.db.import({
       directory: path.resolve(__dirname, './collections'),
     });
+    // children 字段
+    
+    this.app.db.on('fields.beforeCreate', beforeCreateForReverseField(this.app.db));
+    this.app.db.on('fields.beforeCreate', beforeCreateForChildrenCollection(this.app.db));
     this.app.db.on('fields.beforeCreate', async (model, options) => {
       const type = model.get('type');
       await this.app.db.emitAsync(`fields.${type}.beforeInitOptions`, model, options);
@@ -24,5 +31,6 @@ export default class CollectionManagerPlugin extends Plugin {
         this.app.db.on(`fields.${key}.beforeInitOptions`, fn);
       }
     }
+    this.app.db.on('fields.afterCreate', afterCreateForReverseField(this.app.db));
   }
 }

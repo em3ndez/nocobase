@@ -34,6 +34,7 @@ export default {
       targetKey: 'id',
       sourceKey: 'id',
       foreignKey: `f_${uid()}`,
+      target: `t_${uid()}`,
     };
     for (const key in defaults) {
       if (model.get(key)) {
