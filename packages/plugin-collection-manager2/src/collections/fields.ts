@@ -23,12 +23,12 @@ export default {
     },
     {
       type: 'string',
-      name: 'interface',
-      allowNull: true,
+      name: 'type',
     },
     {
       type: 'string',
-      name: 'type',
+      name: 'interface',
+      allowNull: true,
     },
     {
       type: 'belongsTo',

@@ -36,9 +36,7 @@ describe('reverseField options', () => {
         type: 'hasMany',
         collectionName: 'tests',
         target: 'targets',
-        reverseField: {
-          type: 'belongsTo',
-        },
+        reverseField: {},
       },
     });
     const json = JSON.parse(JSON.stringify(field.toJSON()));

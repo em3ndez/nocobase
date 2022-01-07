@@ -30,7 +30,7 @@ describe('children options', () => {
     await app.destroy();
   });
 
-  it('without children', async () => {
+  it('when there are no children, the target collection is not created', async () => {
     const field = await Field.repository.create({
       values: {
         type: 'hasMany',
@@ -47,20 +47,33 @@ describe('children options', () => {
     expect(json.name).toBeDefined();
     expect(json.target).toBeDefined();
     expect(json.foreignKey).toBeDefined();
+    // 无 children 时，target collection 不创建
+    const target = await Collection.model.findOne({
+      where: {
+        name: json.target,
+      },
+    });
+    expect(target).toBeNull();
   });
 
-  it('children', async () => {
+  it('the collectionName of the child field is the target of the parent field', async () => {
     const field = await Field.repository.create({
       values: {
         type: 'hasMany',
         collectionName: 'tests',
-        children: [
-          { type: 'string' },
-          { type: 'string' },
-        ],
+        children: [{ type: 'string' }, { type: 'string' }],
       },
     });
     const json = field.toJSON();
-    console.log(JSON.stringify(json, null, 2));
+    const target = await Collection.model.findOne({
+      where: {
+        name: json.target,
+      },
+    });
+    expect(target).toBeDefined();
+    // 子字段的 collectionName 是父字段的 target
+    for (const child of json.children) {
+      expect(child.collectionName).toBe(json.target);
+    }
   });
 });

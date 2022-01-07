@@ -1,3 +1,3 @@
-import { BaseModel } from './base';
+import { MagicModel } from '@nocobase/database';
 
-export class CollectionModel extends BaseModel {}
+export class CollectionModel extends MagicModel {}
