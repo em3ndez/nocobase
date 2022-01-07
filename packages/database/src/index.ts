@@ -13,3 +13,4 @@ export * from './relation-repository/relation-repository';
 export { Model, ModelCtor } from 'sequelize';
 export * from './fields';
 export * from './update-associations';
+export * from './magic-model';
